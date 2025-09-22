@@ -1,0 +1,115 @@
+<!--HTML5 page for the main page-->
+<!-- HTML5 document type declaration -->
+<!doctype html>
+<!-- Root HTML element with language attribute for accessibility -->
+<html lang="en">
+  <!-- Document head - contains metadata and external resources -->
+  <head>
+    <!-- Character encoding declaration - tells browser how to interpret text -->
+    <meta charset="utf-8" />
+    <!-- Viewport meta tag - makes page responsive on mobile devices -->
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!-- Page title that appears in browser tab -->
+    <title>T h u</title>
+    <!-- Tailwind CSS CDN for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Avenir font import -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Avenir:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Link to external CSS stylesheet for page styling -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <!-- Document body - contains all visible page content -->
+  <body>
+    <!-- Main container for the background image slideshow -->
+    <div class="bg-image-container">
+      <!-- Overlay div that adds a gradient effect over the images -->
+      <!-- This creates the dark-to-light gradient effect for better text readability -->
+      <div class="image-overlay"></div>
+    </div>
+
+    <!-- Navigation bar - fixed at top of page -->
+    <nav class="fixed top-0 left-0 right-0 z-10 bg-white/95 backdrop-blur-sm px-6 py-4 flex items-center border-b border-black/10">
+      <!-- Left side - Collections button -->
+      <div class="flex-1 flex justify-start">
+        <button class="nav-button bg-transparent text-black border border-black px-6 py-3 text-sm cursor-pointer uppercase hover:bg-black hover:text-white" id="collectionsBtn">COLLECTIONS</button>
+      </div>
+      
+      <!-- Center - Logo -->
+      <div class="flex-1 flex justify-center items-center">
+        <img src="assets/logo.svg" alt="Thu Logo" class="h-8 w-auto object-contain font-bold" />
+      </div>
+      
+      <!-- Right side - Currency selector and Support button -->
+      <div class="flex-1 flex justify-end items-center space-x-3">
+        <!-- Currency Selector -->
+        <div class="currency-selector">
+          <select id="currencySelect" class="bg-transparent text-black border border-black px-3 py-2 text-sm cursor-pointer uppercase hover:bg-black hover:text-white transition-all duration-300">
+            <option value="USD">USD ($)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="VND">VND (₫)</option>
+          </select>
+        </div>
+        <!-- Support button -->
+        <button class="nav-button bg-transparent text-black border border-black px-6 py-3 text-sm cursor-pointer uppercase hover:bg-black hover:text-white transition-all duration-300" id="supportBtn">SUPPORT</button>
+      </div>
+    </nav>
+
+    <!-- Slideshow control buttons - hidden by default -->
+    <div class="fixed top-4 right-4 z-20 flex gap-2" style="display: none;">
+      <!-- Play/pause button for the slideshow -->
+      <button id="toggleMotion" aria-pressed="false" class="nav-button bg-gray-800/60 text-white border border-white/25 px-3 py-2 rounded-lg cursor-pointer backdrop-blur-sm hover:bg-gray-800/75 text-xs">Pause slideshow</button>
+      <!-- Manual next image button -->
+      <button id="nextClip" class="nav-button bg-gray-800/60 text-white border border-white/25 px-3 py-2 rounded-lg cursor-pointer backdrop-blur-sm hover:bg-gray-800/75 text-xs">Next image</button>
+    </div>
+
+    <!-- JavaScript file that handles the slideshow functionality -->
+    <script src="script-clean.js"></script>
+    <!-- Support Modal -->
+    <div id="supportModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+      <div class="bg-black border border-white rounded-lg p-8 max-w-md w-full mx-4">
+        <div class="text-center">
+          <h3 class="text-xl font-semibold text-white mb-6" style="font-family: 'Avenir', sans-serif;">Get Support</h3>
+          <p class="text-white mb-6" style="font-family: 'Avenir', sans-serif;">Choose how you'd like to get in touch:</p>
+          <div class="space-y-4">
+            <a href="https://www.facebook.com/share/19yFPqmFqE/?mibextid=wwXIfr" 
+               target="_blank" 
+               class="block w-full bg-transparent border border-white hover:bg-white hover:text-black text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200">
+              <div class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                <span style="font-family: 'Avenir', sans-serif;">PhuongThustudio</span>
+              </div>
+            </a>
+            <a href="https://www.instagram.com/phuongthustudio?igsh=YW81MmxpdnN0ZzR0" 
+               target="_blank" 
+               class="block w-full bg-transparent border border-white hover:bg-white hover:text-black text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200">
+              <div class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C4.198 14.895 3.708 13.744 3.708 12.447s.49-2.448 1.297-3.323c.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c.807.875 1.297 2.026 1.297 3.323s-.49 2.448-1.297 3.323c-.875.807-2.026 1.297-3.323 1.297zm7.718-1.297c-.875.807-2.026 1.297-3.323 1.297s-2.448-.49-3.323-1.297c-.807-.875-1.297-2.026-1.297-3.323s.49-2.448 1.297-3.323c.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c.807.875 1.297 2.026 1.297 3.323s-.49 2.448-1.297 3.323z"/>
+                </svg>
+                <span style="font-family: 'Avenir', sans-serif;">PhuongThustudio</span>
+              </div>
+            </a>
+            <a href="mailto:phuongthu.studio25@gmail.com" 
+               class="block w-full bg-transparent border border-white hover:bg-white hover:text-black text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200">
+              <div class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+                <span style="font-family: 'Avenir', sans-serif;">phuongthu.studio25@gmail.com</span>
+              </div>
+            </a>
+          </div>
+          <button onclick="closeSupportModal()" 
+                  class="mt-6 text-white hover:text-gray-300 text-sm underline" style="font-family: 'Avenir', sans-serif;">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,128 @@
+/* CSS custom properties (variables) for consistent theming */
+:root {
+  /* Dark overlay color for the top of the image gradient */
+  --overlay-from: rgba(0, 0, 0, 0.55);
+  /* Lighter overlay color for the bottom of the image gradient */
+  --overlay-to: rgba(0, 0, 0, 0.25);
+}
+
+/* Universal selector - applies to all elements */
+* { 
+  /* Include padding and border in element's total width and height */
+  box-sizing: border-box; 
+}
+
+/* HTML and body elements - full height layout setup */
+html, body { 
+  height: 100%;  /* Make elements take full viewport height */
+  margin: 0;     /* Remove default browser margins */
+}
+
+/* Body element - main page styling */
+body { 
+  /* Modern font stack with system fonts for better performance */
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; 
+  color: #fff;      /* White text color */
+  background: #000; /* Black background color */
+}
+
+/* Background image container - full viewport coverage */
+.bg-image-container {
+  position: fixed;  /* Fixed positioning relative to viewport */
+  inset: 0;         /* Shorthand for top:0, right:0, bottom:0, left:0 */
+  z-index: -1;      /* Place behind all other content */
+  overflow: hidden; /* Hide any content that overflows the container */
+}
+
+/* Main background image styling - for horizontal/landscape images */
+.bg-image {
+  position: absolute;  /* Absolute positioning within container */
+  inset: 0;           /* Fill the entire container */
+  width: 100%;        /* Full width of container */
+  height: 100%;       /* Full height of container */
+  object-fit: cover;  /* Scale image to cover entire area, may crop */
+  opacity: 1;         /* Fully opaque */
+  transform: scale(1); /* No scaling transformation */
+  background: #000;   /* Black background fallback */
+}
+
+/* Special styling for vertical/portrait images */
+.bg-image.vertical {
+  object-fit: contain;      /* Scale image to fit entirely within area, no cropping */
+  object-position: center;  /* Center the image within the container */
+  background: #000;         /* Black background for empty space */
+  /* Ensure vertical images fit properly without cropping */
+  max-width: 100%;          /* Don't exceed container width */
+  max-height: 100%;         /* Don't exceed container height */
+}
+
+/* Gradient overlay for better text readability over images */
+.image-overlay {
+  position: absolute;  /* Positioned over the image */
+  inset: 0;           /* Cover the entire container */
+  /* Linear gradient from dark at top to lighter at bottom */
+  background: linear-gradient(180deg, var(--overlay-from) 0%, var(--overlay-to) 60%, rgba(0,0,0,0.15) 100%);
+  pointer-events: none; /* Allow clicks to pass through to elements below */
+}
+
+
+/* Navigation button styles with Avenir font */
+.nav-button {
+  font-family: 'Avenir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.nav-button:hover::before {
+  left: 100%;
+}
+
+.nav-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Gallery fade animations */
+.gallery-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-item.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.gallery-item img {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Staggered animation delays for gallery items */
+.gallery-item:nth-child(1) { transition-delay: 0.1s; }
+.gallery-item:nth-child(2) { transition-delay: 0.2s; }
+.gallery-item:nth-child(3) { transition-delay: 0.3s; }
+.gallery-item:nth-child(4) { transition-delay: 0.4s; }
+.gallery-item:nth-child(5) { transition-delay: 0.5s; }
+.gallery-item:nth-child(6) { transition-delay: 0.6s; }

@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery Manager - Thu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Avenir:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Ensure all text is visible */
+        body { color: #374151; }
+        .admin-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .gallery-preview { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+        .gallery-item-admin { border: 2px solid #e5e7eb; border-radius: 8px; padding: 15px; background: white; color: #374151; }
+        .gallery-item-admin img { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; }
+        .admin-form { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #374151; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 14px; color: #374151; background: white; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #000; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-help { display: block; margin-top: 4px; font-size: 12px; color: #666; font-style: italic; }
+        .btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-primary { background: #000; color: white; }
+        .btn-primary:hover { background: #333; }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-secondary { background: #6b7280; color: white; }
+        .btn-secondary:hover { background: #4b5563; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-warning:hover { background: #d97706; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover { background: #059669; }
+        .status-available { color: #059669; font-weight: 600; }
+        .status-sold { color: #dc2626; font-weight: 600; }
+        .instructions { background: #f3f4f6; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        .instructions h3 { color: #374151; }
+        .instructions ol { color: #374151; }
+        .code-output { background: #1f2937; color: #f9fafb; padding: 20px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 14px; margin-top: 20px; }
+        .drop-zone { border: 3px dashed #d1d5db; border-radius: 8px; padding: 40px; text-align: center; background: #f9fafb; transition: all 0.3s ease; cursor: pointer; }
+        .drop-zone:hover, .drop-zone.dragover { border-color: #000; background: #f3f4f6; }
+        .drop-zone.dragover { transform: scale(1.02); }
+        .upload-icon { font-size: 48px; color: #9ca3af; margin-bottom: 16px; }
+        .upload-text { color: #6b7280; font-size: 16px; margin-bottom: 8px; }
+        .upload-subtext { color: #9ca3af; font-size: 14px; }
+        .file-input { display: none; }
+        .upload-progress { width: 100%; height: 4px; background: #e5e7eb; border-radius: 2px; margin-top: 10px; overflow: hidden; }
+        .upload-progress-bar { height: 100%; background: #10b981; transition: width 0.3s ease; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: white; margin: 5% auto; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; position: relative; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-title { font-size: 1.5rem; font-weight: 600; color: #374151; margin: 0; }
+        .close { color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close:hover { color: #000; }
+        .modal-body { margin-bottom: 20px; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="admin-container">
+        <header class="mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2" style="font-family: 'Avenir', sans-serif;">Gallery Manager</h1>
+                    <p class="text-gray-600">Manage your fashion collection images easily</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="adminUsername" class="text-sm text-gray-600"></span>
+                    <button id="logoutBtn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3 class="font-semibold text-gray-900 mb-2">How to use:</h3>
+            <ol class="text-sm text-gray-700 space-y-1">
+                <li>1. <strong>Drag & Drop:</strong> Drop JPG images directly into the upload area below</li>
+                <li>2. <strong>Manual:</strong> Or add your image files to the <code>assets/gallery</code> folder manually</li>
+                <li>3. Fill out the form below to add new images to the gallery</li>
+                <li>4. Click "Update Gallery Code" to generate the new code</li>
+                <li>5. Copy the generated code and replace the galleryImages array in collections.html</li>
+                <li>6. Save collections.html and refresh your website</li>
+            </ol>
+        </div>
+
+        <!-- File Upload Area -->
+        <div class="admin-form">
+            <h2 class="text-xl font-semibold mb-6 text-gray-900" style="font-family: 'Avenir', sans-serif;">Upload Images</h2>
+            <div class="drop-zone" id="dropZone">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">Drag & Drop JPG images here</div>
+                <div class="upload-subtext">or click to browse files</div>
+                <input type="file" id="fileInput" class="file-input" accept=".jpg,.jpeg" multiple>
+                <div class="upload-progress" id="uploadProgress" style="display: none;">
+                    <div class="upload-progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+            <div id="uploadStatus" class="mt-4 text-sm"></div>
+        </div>
+
+        <!-- Add New Image Form -->
+        <div class="admin-form">
+            <h2 class="text-xl font-semibold mb-6 text-gray-900" style="font-family: 'Avenir', sans-serif;">Add New Image</h2>
+            <form id="imageForm">
+                <div class="form-group">
+                    <label for="imagePath">Image Path</label>
+                    <input type="text" id="imagePath" placeholder="assets/gallery/my-new-image.jpg" required>
+                    <small class="text-gray-500">Put your image in the assets/gallery folder and enter the path here</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="imagePrice">Price</label>
+                    <div class="flex space-x-2">
+                        <input type="number" id="imagePrice" placeholder="299" class="flex-1" step="0.01" style="width: 80%;">
+                        <select id="imageCurrency" style="width: 18%; min-width: 60px;">
+                            <option value="USD">USD</option>
+                            <option value="GBP">GBP</option>
+                            <option value="VND">VND</option>
+                        </select>
+                    </div>
+                    <small class="text-gray-500">Enter price amount and select currency</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="imageStatus">Status</label>
+                    <select id="imageStatus">
+                        <option value="available">Available</option>
+                        <option value="sold">Sold Out</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Add to Gallery</button>
+            </form>
+        </div>
+
+        <!-- Slideshow Playlist Management -->
+        <div class="admin-form">
+            <h2 class="text-xl font-semibold mb-6 text-gray-900" style="font-family: 'Avenir', sans-serif;">Main Page Slideshow Playlist</h2>
+            <p class="text-gray-600 mb-4">Manage the images that appear in the slideshow on the main page. Drag to reorder, add/remove images.</p>
+            
+            <div class="mb-4">
+                <label for="playlistImages" class="block text-sm font-medium text-gray-700 mb-2">Available Images</label>
+                <select id="playlistImages" class="w-full p-3 border border-gray-300 rounded-lg" multiple size="8">
+                    <!-- Available images will be loaded here -->
+                </select>
+                <small class="text-gray-500">Hold Ctrl/Cmd to select multiple images</small>
+            </div>
+            
+            <div class="flex space-x-2 mb-4">
+                <button id="addToPlaylistBtn" class="btn btn-primary">Add to Playlist</button>
+                <button id="removeFromPlaylistBtn" class="btn btn-danger">Remove from Playlist</button>
+                <button id="clearPlaylistBtn" class="btn btn-warning">Clear Playlist</button>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Current Playlist Order</label>
+                <div id="playlistOrder" class="border border-gray-300 rounded-lg p-4 min-h-[200px] bg-gray-50">
+                    <!-- Playlist items will be displayed here -->
+                </div>
+                <small class="text-gray-500">Drag items to reorder. Changes are saved automatically.</small>
+            </div>
+            
+            <div class="flex space-x-2">
+                <button id="savePlaylistBtn" class="btn btn-success">Save Playlist Changes</button>
+                <button id="previewPlaylistBtn" class="btn btn-secondary">Preview on Main Page</button>
+            </div>
+        </div>
+
+        <!-- Current Gallery Preview -->
+        <div class="admin-form">
+            <h2 class="text-xl font-semibold mb-6 text-gray-900" style="font-family: 'Avenir', sans-serif;">Current Gallery</h2>
+            <div id="galleryPreview" class="gallery-preview">
+                <!-- Gallery items will be loaded here -->
+            </div>
+            <div class="mt-6 flex space-x-4">
+                <button id="updateCodeBtn" class="btn btn-primary">Update Gallery Code</button>
+                <button id="clearAllBtn" class="btn btn-danger">Clear All</button>
+            </div>
+        </div>
+
+        <!-- Generated Code Output -->
+        <div id="codeOutput" class="code-output" style="display: none;">
+            <h3 class="text-lg font-semibold mb-4">Generated Code:</h3>
+            <p class="mb-4 text-sm">Copy this code and replace the galleryImages array in collections.html:</p>
+            <pre id="generatedCode"></pre>
+            <button id="copyCodeBtn" class="btn btn-secondary mt-4">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <!-- Edit Item Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Gallery Item</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <div class="form-group">
+                        <label for="editImagePath">Image Path</label>
+                        <input type="text" id="editImagePath" class="form-group input" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editImagesArray">Images Array (for carousel)</label>
+                        <textarea id="editImagesArray" class="form-group input" rows="4" placeholder="Enter image paths, one per line:
+assets/gallery/bg-img2.JPG
+assets/gallery/bg-img4.JPG
+assets/gallery/bg-img5.JPG"></textarea>
+                        <small class="form-help">Enter each image path on a new line. This creates the carousel with multiple images.</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editImagePrice">Price</label>
+                        <div class="flex space-x-2">
+                            <input type="number" id="editImagePrice" class="form-group input flex-1" placeholder="299" step="0.01" style="width: 80%;">
+                            <select id="editImageCurrency" class="form-group input" style="width: 18%; min-width: 60px;">
+                                <option value="USD">USD</option>
+                                <option value="GBP">GBP</option>
+                                <option value="VND">VND</option>
+                            </select>
+                        </div>
+                        <small class="form-help">Enter price amount and select currency</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editImageStatus">Status</label>
+                        <select id="editImageStatus" class="form-group input">
+                            <option value="available">Available</option>
+                            <option value="sold">Sold Out</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Current gallery data - will be loaded from backend
+        let galleryData = [];
+        let playlistData = [];
+        let availableImages = [];
+
+        // Backend API functions
+        async function loadGalleryData() {
+            try {
+                const response = await fetch('/api/gallery');
+                const data = await response.json();
+                galleryData = data.galleryData || [];
+                loadGalleryPreview();
+                loadAvailableImages(); // Also load available images for playlist
+            } catch (error) {
+                console.error('Error loading gallery data:', error);
+                alert('Error loading gallery data. Make sure the server is running.');
+            }
+        }
+
+        async function saveGalleryData() {
+            try {
+                const response = await fetch('/api/gallery', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ galleryData })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    alert('Gallery updated successfully! Collections page has been updated automatically.');
+                } else {
+                    alert('Error updating gallery: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error saving gallery data:', error);
+                alert('Error saving gallery data. Make sure the server is running.');
+            }
+        }
+
+        async function addGalleryItem(item) {
+            try {
+                const response = await fetch('/api/gallery/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(item)
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    await loadGalleryData(); // Reload data
+                    alert('Item added successfully! Collections page has been updated automatically.');
+                } else {
+                    alert('Error adding item: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error adding item:', error);
+                alert('Error adding item. Make sure the server is running.');
+            }
+        }
+
+        async function removeGalleryItem(index) {
+            try {
+                const response = await fetch(`/api/gallery/${index}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    await loadGalleryData(); // Reload data
+                    alert('Item removed successfully! Collections page has been updated automatically.');
+                } else {
+                    alert('Error removing item: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error removing item:', error);
+                alert('Error removing item. Make sure the server is running.');
+            }
+        }
+
+        // Load gallery preview
+        function loadGalleryPreview() {
+            const container = document.getElementById('galleryPreview');
+            container.innerHTML = '';
+
+            galleryData.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'gallery-item-admin';
+                itemDiv.innerHTML = `
+                    <img src="${item.path}" alt="Gallery Image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDIwMCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iNzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzlDQTNBRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SW1hZ2Ugbm90IGZvdW5kPC90ZXh0Pgo8L3N2Zz4K'">
+                    <p class="text-sm text-gray-600">${item.price}</p>
+                    <p class="text-sm ${item.status === 'available' ? 'status-available' : 'status-sold'}">${item.status.toUpperCase()}</p>
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <button onclick="editItem(${index})" class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px; flex: 1; min-width: 0;">Edit</button>
+                        <button onclick="toggleStatus(${index})" class="btn ${item.status === 'available' ? 'btn-warning' : 'btn-success'}" style="padding: 4px 8px; font-size: 11px; flex: 1; min-width: 0;">
+                            ${item.status === 'available' ? 'Sold' : 'Available'}
+                        </button>
+                        <button onclick="removeItem(${index})" class="btn btn-danger" style="padding: 4px 8px; font-size: 11px; flex: 1; min-width: 0;">Remove</button>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+        // Add new image
+        document.getElementById('imageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get price and currency
+            const priceAmount = document.getElementById('imagePrice').value || '299';
+            const currency = document.getElementById('imageCurrency').value;
+            const formattedPrice = formatPriceWithCurrency(priceAmount, currency);
+            
+            const newItem = {
+                path: document.getElementById('imagePath').value,
+                price: formattedPrice,
+                status: document.getElementById('imageStatus').value
+            };
+
+            await addGalleryItem(newItem);
+            
+            // Clear form
+            document.getElementById('imageForm').reset();
+            document.getElementById('imageCurrency').value = 'USD'; // Reset to default currency
+        });
+
+        // Toggle item status
+        async function toggleStatus(index) {
+            try {
+                const currentStatus = galleryData[index].status;
+                const newStatus = currentStatus === 'available' ? 'sold' : 'available';
+                
+                // Update the item in the array
+                galleryData[index].status = newStatus;
+                
+                // Save to backend
+                await saveGalleryData();
+                
+                // Reload the preview to show updated status
+                loadGalleryPreview();
+                
+                alert(`Item status updated to ${newStatus.toUpperCase()}! Collections page has been updated automatically.`);
+            } catch (error) {
+                console.error('Error toggling status:', error);
+                alert('Error updating status. Make sure the server is running.');
+            }
+        }
+
+        // Remove item
+        async function removeItem(index) {
+            if (confirm('Are you sure you want to remove this image?')) {
+                await removeGalleryItem(index);
+            }
+        }
+
+        // Edit item - open modal
+        let editingIndex = -1;
+        function editItem(index) {
+            editingIndex = index;
+            const item = galleryData[index];
+            
+            document.getElementById('editImagePath').value = item.path;
+            
+            // Parse existing price to extract amount and currency
+            const { amount, currency } = parsePrice(item.price);
+            document.getElementById('editImagePrice').value = amount;
+            document.getElementById('editImageCurrency').value = currency;
+            
+            document.getElementById('editImageStatus').value = item.status;
+            
+            // Handle images array - convert array to textarea format
+            if (item.images && Array.isArray(item.images)) {
+                document.getElementById('editImagesArray').value = item.images.join('\n');
+            } else {
+                document.getElementById('editImagesArray').value = item.path || '';
+            }
+            
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        // Close edit modal
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            editingIndex = -1;
+        }
+
+        // Save edit changes
+        async function saveEdit() {
+            if (editingIndex === -1) return;
+            
+            // Convert textarea content to images array
+            const imagesText = document.getElementById('editImagesArray').value.trim();
+            const imagesArray = imagesText ? imagesText.split('\n').map(img => img.trim()).filter(img => img) : [];
+            
+            // Get price and currency
+            const priceAmount = document.getElementById('editImagePrice').value;
+            const currency = document.getElementById('editImageCurrency').value;
+            const formattedPrice = formatPriceWithCurrency(priceAmount, currency);
+            
+            const updatedItem = {
+                path: document.getElementById('editImagePath').value,
+                images: imagesArray.length > 0 ? imagesArray : [document.getElementById('editImagePath').value],
+                price: formattedPrice,
+                status: document.getElementById('editImageStatus').value
+            };
+            
+            try {
+                const response = await fetch(`/api/gallery/${editingIndex}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updatedItem)
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    await loadGalleryData(); // Reload data
+                    closeEditModal();
+                    alert('Item updated successfully! Collections page has been updated automatically.');
+                } else {
+                    alert('Error updating item: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error updating item:', error);
+                alert('Error updating item. Make sure the server is running.');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeEditModal();
+            }
+        }
+
+        // Clear all items
+        document.getElementById('clearAllBtn').addEventListener('click', async function() {
+            if (confirm('Are you sure you want to clear all images?')) {
+                galleryData = [];
+                await saveGalleryData();
+            }
+        });
+
+        // Generate code
+        document.getElementById('updateCodeBtn').addEventListener('click', function() {
+            const code = `      // Gallery images data with status - easy to add/remove images
+      const galleryImages = [
+${galleryData.map(item => `        { src: '${item.path.replace(/\.JPG$/i, '.jpg')}', status: '${item.status}' }`).join(',\n')}
+        // Add more images here - just add new lines!
+        // { src: 'assets/gallery/new-image.jpg', status: 'available' },
+        // { src: 'assets/gallery/another-image.png', status: 'sold' }
+      ];`;
+
+            document.getElementById('generatedCode').textContent = code;
+            document.getElementById('codeOutput').style.display = 'block';
+        });
+
+        // Copy code to clipboard
+        document.getElementById('copyCodeBtn').addEventListener('click', function() {
+            const code = document.getElementById('generatedCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Code copied to clipboard! Now paste it into collections.html');
+            });
+        });
+
+
+        // File upload functionality
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const progressBar = document.getElementById('progressBar');
+        const uploadStatus = document.getElementById('uploadStatus');
+
+        // Drag and drop event listeners
+        dropZone.addEventListener('click', () => fileInput.click());
+        
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // Handle file uploads
+        async function handleFiles(files) {
+            const jpgFiles = Array.from(files).filter(file => 
+                file.type === 'image/jpeg' || file.name.toLowerCase().endsWith('.jpg')
+            );
+            
+            if (jpgFiles.length === 0) {
+                showStatus('Please select only JPG files.', 'error');
+                return;
+            }
+            
+            if (jpgFiles.length !== files.length) {
+                showStatus('Some files were skipped. Only JPG files are allowed.', 'warning');
+            }
+            
+            for (let i = 0; i < jpgFiles.length; i++) {
+                await uploadFile(jpgFiles[i], i + 1, jpgFiles.length);
+            }
+        }
+
+        // Upload individual file
+        async function uploadFile(file, current, total) {
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            showStatus(`Uploading ${file.name} (${current}/${total})...`, 'info');
+            showProgress(true);
+            
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showStatus(`✅ ${file.name} uploaded successfully!`, 'success');
+                    
+                    // Auto-fill the form with the uploaded file path
+                    document.getElementById('imagePath').value = result.filePath;
+                    
+                    // Reload gallery data to show the new file
+                    await loadGalleryData();
+                } else {
+                    showStatus(`❌ Error uploading ${file.name}: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Error uploading ${file.name}: ${error.message}`, 'error');
+            } finally {
+                showProgress(false);
+            }
+        }
+
+        // Show upload status
+        function showStatus(message, type) {
+            uploadStatus.innerHTML = message;
+            uploadStatus.className = `mt-4 text-sm ${
+                type === 'success' ? 'text-green-600' : 
+                type === 'error' ? 'text-red-600' : 
+                type === 'warning' ? 'text-yellow-600' : 
+                'text-blue-600'
+            }`;
+        }
+
+        // Show/hide progress bar
+        function showProgress(show) {
+            uploadProgress.style.display = show ? 'block' : 'none';
+            if (show) {
+                progressBar.style.width = '100%';
+            }
+        }
+
+        // Helper functions for price formatting
+        function formatPriceWithCurrency(amount, currency) {
+            const symbols = {
+                'USD': '$',
+                'GBP': '£',
+                'VND': '₫'
+            };
+            
+            const symbol = symbols[currency] || currency;
+            
+            if (currency === 'VND') {
+                // Vietnamese Dong - round to 4 significant figures
+                const rounded = parseFloat(amount.toPrecision(4));
+                return `${symbol}${Math.round(rounded).toLocaleString('vi-VN')}`;
+            } else {
+                // USD and GBP - 2 decimal places
+                return `${symbol}${parseFloat(amount).toFixed(2)}`;
+            }
+        }
+        
+        function parsePrice(priceString) {
+            if (!priceString) return { amount: '299', currency: 'USD' };
+            
+            // Remove currency symbols and extract currency
+            let currency = 'USD';
+            let amount = priceString;
+            
+            if (priceString.includes('$')) {
+                currency = 'USD';
+                amount = priceString.replace(/[^0-9.]/g, '');
+            } else if (priceString.includes('£')) {
+                currency = 'GBP';
+                amount = priceString.replace(/[^0-9.]/g, '');
+            } else if (priceString.includes('₫')) {
+                currency = 'VND';
+                amount = priceString.replace(/[^0-9.]/g, '');
+            } else {
+                // If no currency symbol, assume USD and extract number
+                amount = priceString.replace(/[^0-9.]/g, '');
+            }
+            
+            return { amount: amount || '299', currency };
+        }
+
+        // Playlist Management Functions
+        async function loadPlaylistData() {
+            try {
+                const response = await fetch('/api/playlist');
+                const data = await response.json();
+                playlistData = data.playlist || [];
+                loadPlaylistPreview();
+            } catch (error) {
+                console.error('Error loading playlist data:', error);
+                // Initialize with empty playlist if API fails
+                playlistData = [];
+                loadPlaylistPreview();
+            }
+        }
+
+        async function savePlaylistData() {
+            try {
+                const response = await fetch('/api/playlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ playlist: playlistData })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    alert('Playlist updated successfully! Main page slideshow has been updated.');
+                } else {
+                    alert('Error updating playlist: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error saving playlist data:', error);
+                alert('Error saving playlist data. Make sure the server is running.');
+            }
+        }
+
+        function loadAvailableImages() {
+            const select = document.getElementById('playlistImages');
+            select.innerHTML = '';
+            
+            // Get all unique image paths from gallery data
+            const imagePaths = new Set();
+            galleryData.forEach(item => {
+                if (item.path) imagePaths.add(item.path);
+                if (item.images && Array.isArray(item.images)) {
+                    item.images.forEach(img => imagePaths.add(img));
+                }
+            });
+            
+            // Add all available images to the select
+            Array.from(imagePaths).forEach(path => {
+                const option = document.createElement('option');
+                option.value = path;
+                option.textContent = path.split('/').pop(); // Show just filename
+                select.appendChild(option);
+            });
+        }
+
+        function loadPlaylistPreview() {
+            const container = document.getElementById('playlistOrder');
+            container.innerHTML = '';
+            
+            if (playlistData.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">No images in playlist. Add some images to get started!</p>';
+                return;
+            }
+            
+            playlistData.forEach((imagePath, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'flex items-center justify-between p-3 mb-2 bg-white border border-gray-200 rounded-lg cursor-move';
+                itemDiv.draggable = true;
+                itemDiv.dataset.index = index;
+                
+                itemDiv.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="text-gray-400 text-sm">${index + 1}.</span>
+                        <img src="${imagePath}" alt="Playlist item" class="w-12 h-12 object-cover rounded" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjI0IiB5PSIyNCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSIjOUNBM0FGIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbWFnZTwvdGV4dD4KPC9zdmc+Cg=='">
+                        <span class="text-sm text-gray-700">${imagePath.split('/').pop()}</span>
+                    </div>
+                    <button onclick="removeFromPlaylist(${index})" class="text-red-500 hover:text-red-700 text-sm">Remove</button>
+                `;
+                
+                // Add drag and drop functionality
+                itemDiv.addEventListener('dragstart', handleDragStart);
+                itemDiv.addEventListener('dragover', handleDragOver);
+                itemDiv.addEventListener('drop', handleDrop);
+                itemDiv.addEventListener('dragend', handleDragEnd);
+                
+                container.appendChild(itemDiv);
+            });
+        }
+
+        // Drag and drop functionality
+        let draggedElement = null;
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.style.opacity = '0.5';
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            if (draggedElement !== this) {
+                const draggedIndex = parseInt(draggedElement.dataset.index);
+                const targetIndex = parseInt(this.dataset.index);
+                
+                // Swap items in array
+                const draggedItem = playlistData[draggedIndex];
+                playlistData.splice(draggedIndex, 1);
+                playlistData.splice(targetIndex, 0, draggedItem);
+                
+                // Reload preview
+                loadPlaylistPreview();
+            }
+        }
+
+        function handleDragEnd(e) {
+            this.style.opacity = '1';
+            draggedElement = null;
+        }
+
+        // Add to playlist
+        document.getElementById('addToPlaylistBtn').addEventListener('click', function() {
+            const select = document.getElementById('playlistImages');
+            const selectedOptions = Array.from(select.selectedOptions);
+            
+            selectedOptions.forEach(option => {
+                const imagePath = option.value;
+                if (!playlistData.includes(imagePath)) {
+                    playlistData.push(imagePath);
+                }
+            });
+            
+            loadPlaylistPreview();
+        });
+
+        // Remove from playlist
+        function removeFromPlaylist(index) {
+            playlistData.splice(index, 1);
+            loadPlaylistPreview();
+        }
+
+        // Clear playlist
+        document.getElementById('clearPlaylistBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear the entire playlist?')) {
+                playlistData = [];
+                loadPlaylistPreview();
+            }
+        });
+
+        // Save playlist
+        document.getElementById('savePlaylistBtn').addEventListener('click', function() {
+            savePlaylistData();
+        });
+
+        // Preview playlist
+        document.getElementById('previewPlaylistBtn').addEventListener('click', function() {
+            window.open('index.html', '_blank');
+        });
+
+        // Authentication functions
+        async function checkAuthStatus() {
+            try {
+                const response = await fetch('/api/auth/status', {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                if (data.authenticated) {
+                    document.getElementById('adminUsername').textContent = `Welcome, ${data.username}`;
+                    return true;
+                } else {
+                    window.location.href = 'admin-login.html';
+                    return false;
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+        }
+        
+        async function logout() {
+            try {
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    window.location.href = 'admin-login.html';
+                } else {
+                    alert('Logout failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Logout failed. Please try again.');
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function() {
+            const isAuthenticated = await checkAuthStatus();
+            if (isAuthenticated) {
+                loadGalleryData();
+                loadPlaylistData();
+            }
+            
+            // Add logout button event listener
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+        });
+    </script>
+</body>
+</html>
