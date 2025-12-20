@@ -104,5 +104,37 @@ const galleryData = [
     "images": [
       "assets/gallery/bg-img27.jpeg"
     ]
+  },
+  {
+    "id": 13,
+    "path": "assets/gallery/bg-img28.jpeg",
+    "status": "sold",
+    "images": [
+      "assets/gallery/bg-img28.jpeg"
+    ]
+  },
+  {
+    "id": 14,
+    "path": "assets/gallery/bg-img29.jpeg",
+    "status": "sold",
+    "images": [
+      "assets/gallery/bg-img29.jpeg"
+    ]
+  },
+  {
+    "id": 15,
+    "path": "assets/gallery/bg-img30.jpeg",
+    "status": "sold",
+    "images": [
+      "assets/gallery/bg-img30.jpeg"
+    ]
+  },
+  {
+    "id": 16,
+    "path": "assets/gallery/bg-img32.jpeg",
+    "status": "sold",
+    "images": [
+      "assets/gallery/bg-img32.jpeg"
+    ]
   }
 ];

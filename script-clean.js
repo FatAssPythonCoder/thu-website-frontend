@@ -95,7 +95,11 @@ function loadPlaylist() {
       'assets/gallery/bg-img11.jpg',
       'assets/gallery/bg-img12.jpg',
       'assets/gallery/bg-img13.jpg',
-      'assets/gallery/bg-img14.jpg'
+      'assets/gallery/bg-img14.jpg',
+      'assets/gallery/bg-img28.jpeg',
+      'assets/gallery/bg-img29.jpeg',
+      'assets/gallery/bg-img30.jpeg',
+      'assets/gallery/bg-img32.jpeg'
     ];
     
     if (!isInitialized) {

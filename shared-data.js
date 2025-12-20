@@ -74,6 +74,30 @@ const defaultGalleryData = [
         path: 'assets/gallery/bg-img27.jpeg',
         status: 'sold',
         images: ['assets/gallery/bg-img27.jpeg']
+    },
+    {
+        id: 13,
+        path: 'assets/gallery/bg-img28.jpeg',
+        status: 'sold',
+        images: ['assets/gallery/bg-img28.jpeg']
+    },
+    {
+        id: 14,
+        path: 'assets/gallery/bg-img29.jpeg',
+        status: 'sold',
+        images: ['assets/gallery/bg-img29.jpeg']
+    },
+    {
+        id: 15,
+        path: 'assets/gallery/bg-img30.jpeg',
+        status: 'sold',
+        images: ['assets/gallery/bg-img30.jpeg']
+    },
+    {
+        id: 16,
+        path: 'assets/gallery/bg-img32.jpeg',
+        status: 'sold',
+        images: ['assets/gallery/bg-img32.jpeg']
     }
 ];
 
@@ -96,7 +120,11 @@ const defaultPlaylistData = [
     'assets/gallery/bg-img14.jpg',
     'assets/gallery/bg-img15.jpg',
     'assets/gallery/bg-img16.jpg',
-    'assets/gallery/bg-img17.jpg'
+    'assets/gallery/bg-img17.jpg',
+    'assets/gallery/bg-img28.jpeg',
+    'assets/gallery/bg-img29.jpeg',
+    'assets/gallery/bg-img30.jpeg',
+    'assets/gallery/bg-img32.jpeg'
 ];
 
 // Data management functions
@@ -192,6 +220,30 @@ const SharedData = {
                 path: 'assets/gallery/bg-img27.jpeg',
                 status: 'sold',
                 images: ['assets/gallery/bg-img27.jpeg']
+            },
+            {
+                id: 13,
+                path: 'assets/gallery/bg-img28.jpeg',
+                status: 'sold',
+                images: ['assets/gallery/bg-img28.jpeg']
+            },
+            {
+                id: 14,
+                path: 'assets/gallery/bg-img29.jpeg',
+                status: 'sold',
+                images: ['assets/gallery/bg-img29.jpeg']
+            },
+            {
+                id: 15,
+                path: 'assets/gallery/bg-img30.jpeg',
+                status: 'sold',
+                images: ['assets/gallery/bg-img30.jpeg']
+            },
+            {
+                id: 16,
+                path: 'assets/gallery/bg-img32.jpeg',
+                status: 'sold',
+                images: ['assets/gallery/bg-img32.jpeg']
             }
         ];
     },
@@ -244,7 +296,11 @@ const SharedData = {
             'assets/gallery/bg-img14.jpg',
             'assets/gallery/bg-img15.jpg',
             'assets/gallery/bg-img16.jpg',
-            'assets/gallery/bg-img17.jpg'
+            'assets/gallery/bg-img17.jpg',
+            'assets/gallery/bg-img28.jpeg',
+            'assets/gallery/bg-img29.jpeg',
+            'assets/gallery/bg-img30.jpeg',
+            'assets/gallery/bg-img32.jpeg'
         ];
     },
 
