@@ -50,6 +50,30 @@ const defaultGalleryData = [
         path: 'assets/gallery/bg-img17.jpg',
         status: 'sold',
         images: ['assets/gallery/bg-img17.jpg', 'assets/gallery/bg-img16.jpg']
+    },
+    {
+        id: 9,
+        path: 'assets/gallery/bg-img20.jpeg',
+        status: 'available',
+        images: ['assets/gallery/bg-img20.jpeg']
+    },
+    {
+        id: 10,
+        path: 'assets/gallery/bg-img21.jpeg',
+        status: 'available',
+        images: ['assets/gallery/bg-img21.jpeg']
+    },
+    {
+        id: 11,
+        path: 'assets/gallery/bg-img22.jpeg',
+        status: 'sold',
+        images: ['assets/gallery/bg-img22.jpeg']
+    },
+    {
+        id: 12,
+        path: 'assets/gallery/bg-img27.jpeg',
+        status: 'available',
+        images: ['assets/gallery/bg-img27.jpeg']
     }
 ];
 
@@ -144,6 +168,30 @@ const SharedData = {
                 path: 'assets/gallery/bg-img17.jpg',
                 status: 'sold',
                 images: ['assets/gallery/bg-img17.jpg', 'assets/gallery/bg-img16.jpg']
+            },
+            {
+                id: 9,
+                path: 'assets/gallery/bg-img20.jpeg',
+                status: 'available',
+                images: ['assets/gallery/bg-img20.jpeg']
+            },
+            {
+                id: 10,
+                path: 'assets/gallery/bg-img21.jpeg',
+                status: 'available',
+                images: ['assets/gallery/bg-img21.jpeg']
+            },
+            {
+                id: 11,
+                path: 'assets/gallery/bg-img22.jpeg',
+                status: 'sold',
+                images: ['assets/gallery/bg-img22.jpeg']
+            },
+            {
+                id: 12,
+                path: 'assets/gallery/bg-img27.jpeg',
+                status: 'available',
+                images: ['assets/gallery/bg-img27.jpeg']
             }
         ];
     },
