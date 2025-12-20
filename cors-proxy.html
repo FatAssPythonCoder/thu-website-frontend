@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Proxy</title>
+</head>
+<body>
+    <script>
+        // Simple CORS proxy using a public CORS proxy service
+        const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+        const targetUrl = 'https://thu-website-backend-ught.vercel.app/api/gallery';
+        
+        fetch(proxyUrl + targetUrl)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Gallery data via proxy:', data);
+                // Send data to parent window
+                if (window.parent) {
+                    window.parent.postMessage({type: 'galleryData', data: data}, '*');
+                }
+            })
+            .catch(error => {
+                console.error('Proxy error:', error);
+            });
+    </script>
+</body>
+</html>

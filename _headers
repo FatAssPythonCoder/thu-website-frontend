@@ -10,10 +10,6 @@
   Content-Type: image/jpeg
   Cache-Control: public, max-age=31536000
 
-/*.JPG
-  Content-Type: image/jpeg
-  Cache-Control: public, max-age=31536000
-
 /*.png
   Content-Type: image/png
   Cache-Control: public, max-age=31536000
@@ -29,5 +25,14 @@
 /*.js
   Content-Type: application/javascript
   Cache-Control: public, max-age=31536000
+
+/*.html
+  Content-Type: text/html
+  X-Content-Type-Options: nosniff
+
+/fonts/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000
+
 
 

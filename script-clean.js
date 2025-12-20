@@ -4,8 +4,6 @@
   // Enables strict mode for better error catching and performance
   'use strict';
   
-  // Log startup message to console for debugging
-  console.log('Starting image slideshow...');
   
   // Get the container element where images will be displayed
   const imageContainer = document.querySelector('.bg-image-container');
@@ -21,11 +19,11 @@
   // Array of vertical images that need special CSS treatment
   // These images are portrait orientation and need different display properties
   const verticalImages = [
-    'assets/gallery/bg-img2.JPG',     // Vertical image 1
-    'assets/gallery/bg-img4.JPG',     // Vertical image 2
-    'assets/gallery/bg-img5.JPG',     // Vertical image 3
-    'assets/gallery/bg-img12.JPG',    // Vertical image 4
-    'assets/gallery/bg-img14.JPG',    // Vertical image 5
+    'assets/gallery/bg-img2.jpg',     // Vertical image 1
+    'assets/gallery/bg-img4.jpg',     // Vertical image 2
+    'assets/gallery/bg-img5.jpg',     // Vertical image 3
+    'assets/gallery/bg-img12.jpg',    // Vertical image 4
+    'assets/gallery/bg-img14.jpg',    // Vertical image 5
   ];
 
   // State variables for slideshow control
@@ -43,52 +41,61 @@
   // Add the image element to the container so it appears on the page
   imageContainer.appendChild(image);
 
-// Function to load playlist from backend API
-async function loadPlaylist() {
-  try {
-    console.log('Loading playlist from backend API...');
-    const response = await fetch('https://thu-website-backend-ught.vercel.app/api/playlist');
-    const data = await response.json();
-      
-      if (data.playlist && Array.isArray(data.playlist)) {
-        playlist = data.playlist;
-        console.log('Playlist loaded successfully:', playlist.length, 'images');
-        
-        // Initialize slideshow if not already done
-        if (!isInitialized) {
-          initializeSlideshow();
-        }
-      } else {
-        console.error('Invalid playlist data received:', data);
-        // Fallback to default playlist
-        loadDefaultPlaylist();
-      }
-    } catch (error) {
-      console.error('Error loading playlist from API:', error);
-      // Fallback to default playlist
-      loadDefaultPlaylist();
-    }
+// Function to load playlist from shared data (real-time updates!)
+function loadPlaylist() {
+  
+  // Check if SharedData is available
+  if (typeof window.SharedData !== 'undefined') {
+    // Get data from shared data source
+    playlist = window.SharedData.getPlaylistData();
+  } else {
+    // Fallback to static data if SharedData not available
+    playlist = [
+      'assets/gallery/bg-img.jpg',
+      'assets/gallery/bg-img1.jpg',
+      'assets/gallery/bg-img2.jpg',
+      'assets/gallery/bg-img3.jpg',
+      'assets/gallery/bg-img4.jpg',
+      'assets/gallery/bg-img5.jpg',
+      'assets/gallery/bg-img6.jpg',
+      'assets/gallery/bg-img7.jpg',
+      'assets/gallery/bg-img8.jpg',
+      'assets/gallery/bg-img9.jpg',
+      'assets/gallery/bg-img10.jpg',
+      'assets/gallery/bg-img11.jpg',
+      'assets/gallery/bg-img12.jpg',
+      'assets/gallery/bg-img13.jpg',
+      'assets/gallery/bg-img14.jpg',
+      'assets/gallery/bg-img15.jpg',
+      'assets/gallery/bg-img16.jpg',
+      'assets/gallery/bg-img17.jpg'
+    ];
   }
+  
+  // Initialize slideshow if not already done
+  if (!isInitialized) {
+    initializeSlideshow();
+  }
+}
 
   // Function to load default playlist as fallback
   function loadDefaultPlaylist() {
-    console.log('Loading default playlist as fallback...');
     playlist = [
-      'assets/gallery/bg-img.JPG',
-      'assets/gallery/bg-img1.JPG',
-      'assets/gallery/bg-img2.JPG',
-      'assets/gallery/bg-img3.JPG',
-      'assets/gallery/bg-img4.JPG',
-      'assets/gallery/bg-img5.JPG',
-      'assets/gallery/bg-img6.JPG',
-      'assets/gallery/bg-img7.JPG',
-      'assets/gallery/bg-img8.JPG',
-      'assets/gallery/bg-img9.JPG',
-      'assets/gallery/bg-img10.JPG',
-      'assets/gallery/bg-img11.JPG',
-      'assets/gallery/bg-img12.JPG',
+      'assets/gallery/bg-img.jpg',
+      'assets/gallery/bg-img1.jpg',
+      'assets/gallery/bg-img2.jpg',
+      'assets/gallery/bg-img3.jpg',
+      'assets/gallery/bg-img4.jpg',
+      'assets/gallery/bg-img5.jpg',
+      'assets/gallery/bg-img6.jpg',
+      'assets/gallery/bg-img7.jpg',
+      'assets/gallery/bg-img8.jpg',
+      'assets/gallery/bg-img9.jpg',
+      'assets/gallery/bg-img10.jpg',
+      'assets/gallery/bg-img11.jpg',
+      'assets/gallery/bg-img12.jpg',
       'assets/gallery/bg-img13.jpg',
-      'assets/gallery/bg-img14.JPG'
+      'assets/gallery/bg-img14.jpg'
     ];
     
     if (!isInitialized) {
@@ -103,7 +110,6 @@ async function loadPlaylist() {
       return;
     }
     
-    console.log('Initializing slideshow with', playlist.length, 'images');
     isInitialized = true;
     
     // Load the first image (index 0)
@@ -119,8 +125,6 @@ async function loadPlaylist() {
     // Check if this image is in the vertical images array
     const isVertical = verticalImages.includes(src);
     
-    // Log image loading details for debugging
-    console.log('Loading image:', src, 'Index:', index, 'Vertical:', isVertical);
     
     // Apply appropriate CSS class based on image orientation
     if (isVertical) {
@@ -139,8 +143,6 @@ async function loadPlaylist() {
   function nextImage() {
     // Increment index and wrap around to 0 when reaching the end
     currentIndex = (currentIndex + 1) % playlist.length;
-    // Log the image switch for debugging
-    console.log('Switching to image index:', currentIndex);
     // Load the new image
     loadImage(currentIndex);
   }
@@ -155,7 +157,7 @@ async function loadPlaylist() {
       if (isPlaying) {
         nextImage();
       }
-    }, 500);
+    }, 300);
   }
 
   // Function to stop automatic image cycling
@@ -171,18 +173,14 @@ async function loadPlaylist() {
 
   // Event listener for successful image loading
   image.addEventListener('load', () => {
-    // Log successful image load for debugging
-    console.log('Image loaded successfully:', image.src);
   });
 
   // Event listener for image loading errors
   image.addEventListener('error', (e) => {
-    // Log image loading errors for debugging
     console.error('Image failed to load:', image.src, e);
   });
 
   // Initialize the slideshow when the script loads
-  console.log('Loading slideshow playlist...');
   // Load playlist from backend API
   loadPlaylist();
 
@@ -227,8 +225,6 @@ async function loadPlaylist() {
   if (collectionsBtn) {
     // Add click event listener to the collections button
     collectionsBtn.addEventListener('click', () => {
-      // Log button click for debugging
-      console.log('Collections clicked');
       // Navigate to collections page
       window.location.href = 'collections.html';
     });
@@ -245,9 +241,6 @@ async function loadPlaylist() {
 
   // Log final initialization message with total image count
   // Note: This will be logged when playlist is loaded from API
-
-  // Initialize currency converter
-  initializeCurrencyConverter();
 })(); // End of IIFE - immediately invoke the function
 
 // Support Modal Functions
@@ -264,108 +257,5 @@ function closeSupportModal() {
   if (modal) {
     modal.classList.add('hidden');
     modal.style.display = 'none';
-  }
-}
-
-// Currency Converter Functionality
-function initializeCurrencyConverter() {
-  const currencySelect = document.getElementById('currencySelect');
-  
-  if (!currencySelect) {
-    console.log('Currency selector not found on this page');
-    return;
-  }
-
-  // Load saved currency preference
-  const savedCurrency = localStorage.getItem('selectedCurrency') || 'USD';
-  currencySelect.value = savedCurrency;
-
-  // Currency change event listener
-  currencySelect.addEventListener('change', async (e) => {
-    const selectedCurrency = e.target.value;
-    
-    // Save preference
-    localStorage.setItem('selectedCurrency', selectedCurrency);
-    
-    // Update all prices on the page
-    await updatePricesOnPage(selectedCurrency);
-  });
-
-  // Initial price update
-  updatePricesOnPage(savedCurrency);
-}
-
-async function updatePricesOnPage(targetCurrency) {
-  try {
-    console.log('Updating prices to currency:', targetCurrency);
-    
-    // Find all price elements
-    const priceElements = document.querySelectorAll('[data-price]');
-    
-    console.log('Found price elements:', priceElements.length);
-    
-    if (priceElements.length === 0) {
-      console.log('No price elements found on this page');
-      return;
-    }
-
-    for (const element of priceElements) {
-      const originalPrice = element.dataset.price;
-      const originalCurrency = element.dataset.currency || 'USD';
-      
-      console.log('Processing price:', originalPrice, originalCurrency, '->', targetCurrency);
-      
-      if (originalCurrency === targetCurrency) {
-        // Same currency, no conversion needed
-        const formattedPrice = formatCurrency(parseFloat(originalPrice), targetCurrency);
-        element.textContent = formattedPrice;
-        continue;
-      }
-
-      try {
-        // Convert currency
-        const response = await fetch(`https://thu-website-backend-ught.vercel.app/api/currency/convert?amount=${originalPrice}&from=${originalCurrency}&to=${targetCurrency}`);
-        const data = await response.json();
-        
-        console.log('Conversion response:', data);
-        
-        if (data.success) {
-          const convertedPrice = formatCurrency(data.converted.amount, targetCurrency);
-          element.textContent = convertedPrice;
-          console.log('Converted price:', convertedPrice);
-        } else {
-          console.error('Currency conversion failed:', data.error);
-          // Fallback to original price
-          const formattedPrice = formatCurrency(parseFloat(originalPrice), originalCurrency);
-          element.textContent = formattedPrice;
-        }
-      } catch (error) {
-        console.error('Error converting currency:', error);
-        // Fallback to original price
-        const formattedPrice = formatCurrency(parseFloat(originalPrice), originalCurrency);
-        element.textContent = formattedPrice;
-      }
-    }
-  } catch (error) {
-    console.error('Error updating prices:', error);
-  }
-}
-
-function formatCurrency(amount, currency) {
-  const symbols = {
-    'USD': '$',
-    'GBP': '£',
-    'VND': '₫'
-  };
-  
-  const symbol = symbols[currency] || currency;
-  
-  if (currency === 'VND') {
-    // Vietnamese Dong - round to 4 significant figures
-    const rounded = parseFloat(amount.toPrecision(4));
-    return `${symbol}${Math.round(rounded).toLocaleString('vi-VN')}`;
-  } else {
-    // USD and GBP - 2 decimal places
-    return `${symbol}${amount.toFixed(2)}`;
   }
 }

@@ -20,8 +20,8 @@ html, body {
 
 /* Body element - main page styling */
 body { 
-  /* Modern font stack with system fonts for better performance */
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; 
+  /* System font stack for clean, native look */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
   color: #fff;      /* White text color */
   background: #000; /* Black background color */
 }
