@@ -54,13 +54,13 @@ const defaultGalleryData = [
     {
         id: 9,
         path: 'assets/gallery/bg-img20.jpeg',
-        status: 'available',
+        status: 'sold',
         images: ['assets/gallery/bg-img20.jpeg']
     },
     {
         id: 10,
         path: 'assets/gallery/bg-img21.jpeg',
-        status: 'available',
+        status: 'sold',
         images: ['assets/gallery/bg-img21.jpeg']
     },
     {
@@ -72,7 +72,7 @@ const defaultGalleryData = [
     {
         id: 12,
         path: 'assets/gallery/bg-img27.jpeg',
-        status: 'available',
+        status: 'sold',
         images: ['assets/gallery/bg-img27.jpeg']
     }
 ];
@@ -172,13 +172,13 @@ const SharedData = {
             {
                 id: 9,
                 path: 'assets/gallery/bg-img20.jpeg',
-                status: 'available',
+                status: 'sold',
                 images: ['assets/gallery/bg-img20.jpeg']
             },
             {
                 id: 10,
                 path: 'assets/gallery/bg-img21.jpeg',
-                status: 'available',
+                status: 'sold',
                 images: ['assets/gallery/bg-img21.jpeg']
             },
             {
@@ -190,7 +190,7 @@ const SharedData = {
             {
                 id: 12,
                 path: 'assets/gallery/bg-img27.jpeg',
-                status: 'available',
+                status: 'sold',
                 images: ['assets/gallery/bg-img27.jpeg']
             }
         ];

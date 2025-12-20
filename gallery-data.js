@@ -76,7 +76,7 @@ const galleryData = [
   {
     "id": 9,
     "path": "assets/gallery/bg-img20.jpeg",
-    "status": "available",
+    "status": "sold",
     "images": [
       "assets/gallery/bg-img20.jpeg"
     ]
@@ -84,7 +84,7 @@ const galleryData = [
   {
     "id": 10,
     "path": "assets/gallery/bg-img21.jpeg",
-    "status": "available",
+    "status": "sold",
     "images": [
       "assets/gallery/bg-img21.jpeg"
     ]
@@ -100,7 +100,7 @@ const galleryData = [
   {
     "id": 12,
     "path": "assets/gallery/bg-img27.jpeg",
-    "status": "available",
+    "status": "sold",
     "images": [
       "assets/gallery/bg-img27.jpeg"
     ]
