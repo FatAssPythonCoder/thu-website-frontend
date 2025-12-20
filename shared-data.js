@@ -98,6 +98,18 @@ const defaultGalleryData = [
         path: 'assets/gallery/bg-img32.jpeg',
         status: 'sold',
         images: ['assets/gallery/bg-img32.jpeg']
+    },
+    {
+        id: 17,
+        path: 'assets/gallery/bg-img33.jpeg',
+        status: 'sold',
+        images: ['assets/gallery/bg-img33.jpeg']
+    },
+    {
+        id: 18,
+        path: 'assets/gallery/bg-img34.jpeg',
+        status: 'sold',
+        images: ['assets/gallery/bg-img34.jpeg']
     }
 ];
 
@@ -244,6 +256,18 @@ const SharedData = {
                 path: 'assets/gallery/bg-img32.jpeg',
                 status: 'sold',
                 images: ['assets/gallery/bg-img32.jpeg']
+            },
+            {
+                id: 17,
+                path: 'assets/gallery/bg-img33.jpeg',
+                status: 'sold',
+                images: ['assets/gallery/bg-img33.jpeg']
+            },
+            {
+                id: 18,
+                path: 'assets/gallery/bg-img34.jpeg',
+                status: 'sold',
+                images: ['assets/gallery/bg-img34.jpeg']
             }
         ];
     },
